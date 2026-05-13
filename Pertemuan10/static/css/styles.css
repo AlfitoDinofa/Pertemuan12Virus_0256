@@ -1,0 +1,102 @@
+/* --- Base Styles (Existing) --- */
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+.card {
+  border-radius: 15px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateY(50px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* --- THE BLACKOUT LOCKDOWN MODE --- */
+
+body.locked {
+  overflow: hidden !important; /* Kunci Scroll */
+}
+
+/* 1. Shield Hitam Pekat (Menutup Seluruh Halaman) */
+body.locked::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 9999999;
+  cursor: not-allowed !important;
+  pointer-events: all !important; /* Shield menangkap semua klik */
+}
+
+/* 2. Visual Glitch/Disturbing Image */
+body.locked::after {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  /* Menggunakan GIF glitch statis dengan filter merah intens */
+  background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZ3R5ZmRnd3R5Znd0eWZnd3R5Znd0eWZnd3R5Znd0eWZnd3ImZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/3o7TKMGpxx6r2/giphy.gif');
+  background-size: cover;
+  z-index: 10000000;
+  opacity: 0.5;
+  filter: sepia(1) hue-rotate(-50deg) contrast(2) brightness(0.8);
+  pointer-events: none;
+  animation: strobeEffect 0.05s infinite; /* Kedipan sangat cepat */
+}
+
+/* 3. Animasi Strobe (Kedip Negatif) */
+@keyframes strobeEffect {
+  0% { filter: invert(0) sepia(1) hue-rotate(-50deg); opacity: 0.5; }
+  50% { filter: invert(1) brightness(1.5); opacity: 0.8; }
+  100% { filter: invert(0) sepia(1) hue-rotate(-50deg); opacity: 0.5; }
+}
+
+/* 4. Teks Pesan Error yang Muncul di Atas Layar Hitam */
+.lock-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff0000;
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  z-index: 10000001;
+  pointer-events: none;
+  display: none;
+  text-shadow: 0 0 15px #ff0000;
+  letter-spacing: 5px;
+}
+
+body.locked .lock-message {
+  display: block;
+  animation: textJump 0.2s infinite;
+}
+
+@keyframes textJump {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-52%, -48%) scale(1.05); color: #fff; }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Menghilangkan semua elemen asli saat terkunci agar tidak tembus cahaya */
+body.locked .container, 
+body.locked .navbar {
+  opacity: 0 !important;
+  transition: opacity 0.1s;
+}
